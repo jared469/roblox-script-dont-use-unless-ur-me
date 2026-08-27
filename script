@@ -1,1 +1,30 @@
-local Players = game:GetService("Players") local LocalPlayer = Players.LocalPlayer print("--- SEARCHING PLAYERGUI FOR MINIGAME ELEMENTS ---") local gui = LocalPlayer:FindFirstChild("PlayerGui") if gui then for _, v in pairs(gui:GetDescendants()) do if v:IsA("GuiObject") and v.Visible then print("Found Visible UI:", v.Name, "| Parent:", v.Parent.Name, "| Class:", v.ClassName) end end end print("--- SEARCH COMPLETE ---")
+local Players = game:GetService("Players")
+local gui = Players.LocalPlayer:FindFirstChild("PlayerGui")
+
+print("--- WATCHING FOR MOVING UI ELEMENTS FOR 2 SECONDS ---")
+local initialPositions = {}
+
+-- Record starting positions
+for _, v in pairs(gui:GetDescendants()) do
+    if v:IsA("GuiObject") and v.Visible then
+        initialPositions[v] = v.AbsolutePosition.X
+    end
+end
+
+-- Wait to let the indicator line move
+task.wait(2.5)
+
+print("--- RESULTS: ---")
+local found = false
+for v, startX in pairs(initialPositions) do
+    if v.Parent and v.Visible and v.AbsolutePosition.X ~= startX then
+        print("MOVING INDICATOR NAME:", v.Name)
+        print("METER BAR (PARENT) NAME:", v.Parent.Name)
+        found = true
+    end
+end
+
+if not found then
+    print("Nothing moved! Make sure the minigame is active before running.")
+end
+print("----------------")
