@@ -1,11 +1,1 @@
-local mainBar = path.to.MainBar
-local barLeft = mainBar.AbsolutePosition.X
-local barWidth = mainBar.AbsoluteSize.X
-
--- Calculate the center 4% of the bar (the dark green strip)
-local centerMinX = barLeft + (barWidth * 0.48)
-local centerMaxX = barLeft + (barWidth * 0.52)
-
-if indicatorCenterX >= centerMinX and indicatorCenterX <= centerMaxX then
-    -- Trigger perfect hit action
-end
+local RunService, VIM, Players, Cam = game:GetService("RunService"), game:GetService("VirtualInputManager"), game:GetService("Players"), workspace.CurrentCamera local LocalPlayer, active = Players.LocalPlayer, false print("Midpoint Script Loaded! Press G to toggle.") game:GetService("UserInputService").InputBegan:Connect(function(input, gProc) if gProc or input.KeyCode ~= Enum.KeyCode.G then return end active = not active print("Auto-Hit Active:", active) end) RunService.RenderStepped:Connect(function() if not active then return end local gui = LocalPlayer:FindFirstChild("PlayerGui") if not gui then return end local mainBar = gui:FindFirstChild("Bar", true) or gui:FindFirstChild("Meter", true) or gui:FindFirstChild("Background", true) local indicator = gui:FindFirstChild("Pointer", true) or gui:FindFirstChild("Indicator", true) or gui:FindFirstChild("Line", true) if not (mainBar and indicator and mainBar.Visible and indicator.Visible) then return end local barLeft = mainBar.AbsolutePosition.X local barWidth = mainBar.AbsoluteSize.X local centerMinX = barLeft + (barWidth * 0.48) local centerMaxX = barLeft + (barWidth * 0.52) local indX = indicator.AbsolutePosition.X + (indicator.AbsoluteSize.X / 2) if indX >= centerMinX and indX <= centerMaxX then local size = Cam.ViewportSize VIM:SendMouseButtonEvent(math.floor(size.X/2), math.floor(size.Y/2), 0, true, game, 1) task.wait(0.05) VIM:SendMouseButtonEvent(math.floor(size.X/2), math.floor(size.Y/2), 0, false, game, 1) print("Hit Dark Green Midpoint!") task.wait(0.5) end end)
